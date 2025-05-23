@@ -1,0 +1,739 @@
+<sorteo_motocicleta.html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sorteo de Motocicleta</title>
+<style>
+  /* Reset básico */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background: #000;
+    margin: 0 auto;
+    font-family: 'Fedra Sans', Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    color: #eee;
+    max-width: 700px;
+    padding: 20px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  header h1 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    font-weight: 900;
+    color: #fff;
+    text-shadow:
+      0 0 6px #fff,
+      0 0 14px #0ff,
+      0 0 20px #0ff;
+  }
+  header p.subtitle {
+    font-size: 1.1rem;
+    font-variant: small-caps;
+    font-weight: 300;
+    margin-top: 10px;
+    text-align: center;
+    color: #ddd;
+    text-shadow:
+      0 0 4px #fff;
+  }
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    color: #ddd;
+  }
+  input[type="text"],
+  input[type="tel"] {
+    width: 100%;
+    padding: 7px 10px;
+    font-size: 1.15rem;
+    border: 1px solid #333;
+    border-radius: 5px;
+    outline: none;
+    background: #111;
+    color: #eee;
+    transition: 0.3s background ease, 0.3s transform ease, 0.3s border-color ease;
+    margin-top: 5px;
+  }
+  input[type="text"]:focus,
+  input[type="tel"]:focus {
+    transform: scale(1.01);
+    background: #222;
+    border-color: #0ff;
+    color: #fff;
+  }
+  button {
+    border: none;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 15px 35px;
+    border-radius: 15px;
+    background-image: linear-gradient(
+      45deg,
+      #0ff,
+      #0cc 10%,
+      #099 50%,
+      #066
+    );
+    background-size: 250% 100%;
+    background-position: 0 0;
+    color: #000000;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.55s ease;
+    user-select: none;
+    box-shadow:
+      0 0 10px #0ff;
+  }
+  button:focus {
+    outline: 3px solid #0ff;
+  }
+  button:hover {
+    background-position: 100% 0;
+    box-shadow:
+      0 0 20px #0ff;
+    color: #000;
+  }
+  button:disabled,
+  button[disabled] {
+    background-image: linear-gradient(
+      45deg,
+      #555,
+      #777 10%,
+      #555 50%,
+      #777
+    );
+    cursor: not-allowed;
+    color: #bbb;
+    background-position: 0 0 !important;
+    box-shadow: none;
+  }
+  .info-box {
+    margin-top: 20px;
+    font-weight: 700;
+    font-variant: small-caps;
+    background: linear-gradient(145deg, #003330, #001a1a);
+    border-radius: 15px;
+    padding: 10px 20px;
+    color: #0ff;
+    font-size: 1.3rem;
+    box-shadow:
+      inset 0 0 10px #0ff,
+      0 0 15px #0cc;
+  }
+  .result {
+    text-align: center;
+    margin: 30px 0 15px 0;
+  }
+  .result .number {
+    font-size: 180px;
+    line-height: 1;
+    letter-spacing: -18px;
+    text-shadow:
+      0 0 8px #0ff,
+      0 0 20px #33ffff,
+      0 0 40px #00ffff,
+      0 0 80px #00ffff;
+    font-weight: 900;
+    color: #0ff;
+  }
+  .result div strong {
+    font-size: 42px;
+    letter-spacing: 1px;
+    color: #aff;
+    text-shadow:
+      0 0 5px #0cc;
+  }
+  .pay-amount {
+    color: #6ff;
+    font-weight: 700;
+    font-variant: small-caps;
+    text-shadow:
+      0 0 8px #44f,
+      0 0 14px #44f;
+    font-size: 1.7rem;
+    margin-top: 25px;
+  }
+  section#historySection {
+    margin-top: 25px;
+    background: #002222;
+    border-radius: 15px;
+    padding: 15px 20px;
+    box-shadow: inset 0 0 30px #004444;
+  }
+  section#historySection h2 {
+    margin-top: 0;
+    letter-spacing: 1.2px;
+    font-weight: 600;
+    font-variant: small-caps;
+    color: #6ff;
+    text-shadow: 0 0 5px #0cc;
+  }
+  #historyList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #aff;
+    font-family: monospace;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+  #historyList li {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    border-bottom: 1px solid #005555;
+    padding: 6px 0;
+    align-items: center;
+  }
+  #historyList li span.name {
+    flex-basis: 40%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #historyList li span.number {
+    flex-shrink: 0;
+    width: 40px;
+    text-align: center;
+    color: #0ff;
+  }
+  #historyList li span.pay {
+    flex-shrink: 0;
+    width: 110px;
+    text-align: right;
+    color: #6ff;
+  }
+  #historyList li button {
+    background: #440000cc;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s background ease;
+    user-select: none;
+    box-shadow: 0 0 8px #cc0000aa;
+  }
+  #historyList li button:hover,
+  #historyList li button:focus {
+    background: #bb0000;
+    outline: none;
+    box-shadow: 0 0 15px #ff0000dd;
+  }
+
+  /* Cuadritos para números y pagados */
+  #numbersSection {
+    margin-top: 35px;
+    background: #002222cc;
+    border-radius: 15px;
+    padding: 15px 20px;
+    box-shadow: inset 0 0 40px #004444cc;
+  }
+  #numbersSection h2 {
+    margin-top: 0;
+    letter-spacing: 1.2px;
+    font-weight: 600;
+    font-variant: small-caps;
+    text-shadow: 0 0 5px #11ffff;
+    color: #6ff;
+  }
+  #numbersGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 15px;
+    padding-right: 5px;
+  }
+  .number-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #eee;
+    background-color: #074060;
+    user-select: none;
+    cursor: default;
+    transition: background-color 0.3s ease, transform 0.18s ease;
+    box-shadow:
+      0 0 7px #0080aa, 
+      inset 0 0 5px #006080;
+  }
+  .number-box.paid {
+    background-color: #1c7a1c;
+    box-shadow:
+      0 0 9px #339933, 
+      inset 0 0 12px #55aa55;
+    color: #d5f9d5;
+  }
+  .number-box.paid:hover,
+  .number-box.paid:focus {
+    background-color: #28a428;
+    box-shadow:
+      0 0 20px #66cc66, 
+      inset 0 0 18px #99ee99;
+    color: #fff;
+  }
+
+  /* Alert box */
+  .alert {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #0ff;
+    color: #000;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-variant: small-caps;
+    box-shadow: 0 0 12px #0ff;
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.5s ease;
+    z-index: 9999;
+  }
+  .alert.show {
+    opacity: 0.85;
+    pointer-events: auto;
+  }
+
+  footer {
+    margin-top: 40px;
+    font-size: 0.9rem;
+    text-align: center;
+    letter-spacing: 1px;
+    font-weight: 400;
+    font-style: italic;
+    font-variant: small-caps;
+    color: #7fffbf;
+  }
+    
+  /* Botón oculto para modo propietario */
+  #ownerAccessContainer {
+    text-align: center;
+    margin-top: 40px;
+  }
+  #ownerAccessBtn {
+    background-color: transparent;
+    border: 2px solid #0ff;
+    color: #0ff;
+    padding: 8px 20px;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 1.2px;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 0 8px #0ff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  #ownerAccessBtn:hover,
+  #ownerAccessBtn:focus {
+    background-color: #0ff;
+    color: #000;
+    outline: none;
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main">
+  <header role="banner">
+    <h1>Sorte de moto 450sr modelo 2024 marca CFMOTO</h1>
+    <p class="subtitle">Llena tus datos, saca tu número y conoce cuánto pagarás.</p>
+  </header>
+
+  <!-- Formulario para todo público -->
+  <form id="userForm" aria-label="Formulario para sacar número" autocomplete="off">
+    <label for="nameInput">Nombre Completo</label>
+    <input
+      id="nameInput"
+      name="name"
+      type="text"
+      placeholder="Escribe tu nombre completo"
+      required
+      aria-required="true"
+      autocomplete="name"
+    />
+
+    <label for="phoneInput">Número de Celular</label>
+    <input
+      id="phoneInput"
+      name="phone"
+      type="tel"
+      placeholder="Ej: 5512345678"
+      pattern="^\d{10}$"
+      maxlength="10"
+      minlength="10"
+      required
+      aria-required="true"
+      autocomplete="tel"
+    />
+    <div id="phoneInstructions">Ingrese exactamente 10 dígitos sin espacios ni guiones.</div>
+
+    <button
+      id="drawBtn"
+      type="button"
+      disabled
+      aria-disabled="true"
+      aria-label="Botón para sacar número"
+    >
+      Sacar Número
+    </button>
+  </form>
+
+  <div
+    class="info-box"
+    aria-live="polite"
+    aria-atomic="true"
+    role="region"
+    id="remainingBox"
+    tabindex="0"
+  >
+    Números disponibles: <span id="remainingCount">500</span>
+  </div>
+
+  <div
+    class="result"
+    aria-live="polite"
+    aria-atomic="true"
+    role="region"
+    id="resultArea"
+    style="display:none"
+    tabindex="0"
+  >
+    <div class="number" id="numberDisplay">-</div>
+    <div>
+      Tu número es <strong><span id="numberText"></span></strong>
+    </div>
+    <div class="pay-amount" id="payDisplay">Pagarás: $0</div>
+  </div>
+
+  <!-- Historial -->
+  <section id="historySection" aria-label="Historial de números asignados" tabindex="0">
+    <h2>Historial de Números Asignados</h2>
+    <ul id="historyList" role="list"></ul>
+  </section>
+
+  <!-- Números -->
+  <section id="numbersSection" aria-label="Números Disponibles para Consulta" tabindex="0">
+    <h2>Números Disponibles</h2>
+    <div id="numbersGrid" aria-label="Cuadros con números del sorteo"></div>
+    <p style="margin-top:12px; font-size:0.85rem; font-style: italic; color:#0ff;">
+      Los números pagados están marcados en verde.<br/>
+      Esta vista es solo para consulta y no permite modificaciones para usuarios normales.
+    </p>
+  </section>
+
+  <!-- Botón oculto para modo propietario -->
+  <div id="ownerAccessContainer">
+    <button id="ownerAccessBtn" aria-label="Entrar en modo propietario">Entrar en modo propietario</button>
+  </div>
+</div>
+
+<div class="alert" id="alertBox" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+<footer role="contentinfo">
+  Total de números en sorteo: 500
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const MAX_NUMBERS = 500;
+    const user = 'shamir1313';
+    const pass = '@camaro2015@';
+
+    const nameInput = document.getElementById('nameInput');
+    const phoneInput = document.getElementById('phoneInput');
+    const drawBtn = document.getElementById('drawBtn');
+    const remainingCountSpan = document.getElementById('remainingCount');
+    const resultArea = document.getElementById('resultArea');
+    const numberDisplay = document.getElementById('numberDisplay');
+    const numberText = document.getElementById('numberText');
+    const payDisplay = document.getElementById('payDisplay');
+    const historyList = document.getElementById('historyList');
+    const alertBox = document.getElementById('alertBox');
+    const numbersGrid = document.getElementById('numbersGrid');
+    const ownerAccessBtn = document.getElementById('ownerAccessBtn');
+    const userForm = document.getElementById('userForm');
+    const ownerContainer = document.getElementById('ownerAccessContainer');
+
+    let assignedNumbers = JSON.parse(localStorage.getItem('assignedNumbers')) || [];
+
+    // Start in consulta mode
+    let isOwnerMode = false;
+
+    function updateRemainingCount() {
+      remainingCountSpan.textContent = MAX_NUMBERS - assignedNumbers.length;
+      drawBtn.disabled = !isFormValid() || assignedNumbers.length >= MAX_NUMBERS;
+      drawBtn.setAttribute('aria-disabled', drawBtn.disabled.toString());
+    }
+
+    function showAlert(message) {
+      alertBox.textContent = message;
+      alertBox.classList.add('show');
+      setTimeout(() => {
+        alertBox.classList.remove('show');
+        alertBox.textContent = '';
+      }, 3500);
+    }
+
+    function isFormValid() {
+      const phoneValue = phoneInput.value.trim();
+      const phoneValid = /^\d{10}$/.test(phoneValue);
+      return (
+        nameInput.value.trim().length > 0 &&
+        phoneValid
+      );
+    }
+
+    function calcularPago(numero) {
+      return numero >= 1 && numero <= MAX_NUMBERS ? numero : 0;
+    }
+
+    function renderHistory() {
+      historyList.innerHTML = '';
+      if (assignedNumbers.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = 'Aún no hay números asignados.';
+        li.style.fontStyle = 'italic';
+        historyList.appendChild(li);
+        return;
+      }
+      assignedNumbers.forEach(entry => {
+        const li = document.createElement('li');
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'name';
+        nameSpan.title = entry.name;
+        nameSpan.textContent = entry.name;
+
+        const numberSpan = document.createElement('span');
+        numberSpan.className = 'number';
+        numberSpan.textContent = entry.number;
+        if(entry.paid) {
+          numberSpan.style.color = '#1c7a1c';
+          numberSpan.style.fontWeight = '700';
+        }
+
+        const paySpan = document.createElement('span');
+        paySpan.className = 'pay';
+        paySpan.textContent = '$' + calcularPago(entry.number).toLocaleString();
+
+        li.appendChild(nameSpan);
+        li.appendChild(numberSpan);
+        li.appendChild(paySpan);
+
+        if (isOwnerMode) {
+          const deleteBtn = document.createElement('button');
+          deleteBtn.textContent = 'Eliminar';
+          deleteBtn.setAttribute('aria-label', `Eliminar asignación número ${entry.number} de ${entry.name}`);
+          deleteBtn.onclick = () => {
+            deleteEntry(entry.number);
+          };
+          li.appendChild(deleteBtn);
+        }
+
+        historyList.appendChild(li);
+      });
+    }
+
+    function generarNumeroNoAsignado() {
+      if (assignedNumbers.length >= MAX_NUMBERS) return null;
+      let numero;
+      const assignedSet = new Set(assignedNumbers.map(e => e.number));
+      do {
+        numero = Math.floor(Math.random() * MAX_NUMBERS) + 1;
+      } while (assignedSet.has(numero));
+      return numero;
+    }
+
+    function handleInputChange() {
+      updateRemainingCount();
+    }
+
+    function renderNumbers() {
+      numbersGrid.innerHTML = '';
+      for (let i = 1; i <= MAX_NUMBERS; i++) {
+        const box = document.createElement('div');
+        box.className = 'number-box';
+        box.tabIndex = 0;
+        box.setAttribute('aria-pressed', 'false');
+        box.textContent = i;
+
+        const entry = assignedNumbers.find(e => e.number === i);
+        if (entry) {
+          box.classList.add('paid');
+          box.setAttribute('aria-pressed', entry.paid ? 'true' : 'false');
+        } else {
+          box.classList.remove('paid');
+          box.setAttribute('aria-pressed', 'false');
+        }
+
+        if (isOwnerMode) {
+          box.classList.remove('locked');
+          box.style.cursor = 'pointer';
+          box.onclick = () => togglePaidStatus(i);
+          box.onkeydown = (e) => {
+            if(e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              togglePaidStatus(i);
+            }
+          };
+        } else {
+          box.classList.add('locked');
+          box.style.cursor = 'default';
+          box.onclick = null;
+          box.onkeydown = null;
+        }
+
+        numbersGrid.appendChild(box);
+      }
+    }
+
+    function updateNumberBoxes() {
+      const boxes = numbersGrid.children;
+      assignedNumbers.forEach(entry => {
+        const box = boxes[entry.number - 1];
+        if (box) {
+          if (entry.paid) {
+            box.classList.add('paid');
+            box.setAttribute('aria-pressed', 'true');
+          } else {
+            box.classList.remove('paid');
+            box.setAttribute('aria-pressed', 'false');
+          }
+        }
+      });
+    }
+
+    function togglePaidStatus(number) {
+      if (!isOwnerMode) return;
+      const entry = assignedNumbers.find(e => e.number === number);
+      if (!entry) {
+        showAlert(`El número ${number} aún no está asignado.`);
+        return;
+      }
+      entry.paid = !entry.paid;
+      localStorage.setItem('assignedNumbers', JSON.stringify(assignedNumbers));
+      updateNumberBoxes();
+      renderHistory();
+      showAlert(`Número ${number} marcado como ${entry.paid ? 'pagado' : 'no pagado'}.`);
+    }
+
+    function deleteEntry(number) {
+      if (!isOwnerMode) return;
+      assignedNumbers = assignedNumbers.filter(e => e.number !== number);
+      localStorage.setItem('assignedNumbers', JSON.stringify(assignedNumbers));
+      renderHistory();
+      updateRemainingCount();
+      updateNumberBoxes();
+      showAlert(`Número ${number} eliminado.`);
+    }
+
+    drawBtn.addEventListener('click', () => {
+      if (!isFormValid()) {
+        showAlert('Por favor, completa todos los datos correctamente. El número de celular debe tener exactamente 10 dígitos.');
+        return;
+      }
+      if (assignedNumbers.length >= MAX_NUMBERS) {
+        drawBtn.disabled = true;
+        drawBtn.setAttribute('aria-disabled', 'true');
+        showAlert('No hay números disponibles para asignar.');
+        return;
+      }
+
+      const numeroSorteado = generarNumeroNoAsignado();
+
+      if (numeroSorteado === null) {
+        showAlert('No quedan números para asignar.');
+        drawBtn.disabled = true;
+        drawBtn.setAttribute('aria-disabled', 'true');
+        return;
+      }
+
+      const pago = calcularPago(numeroSorteado);
+      const nombre = nameInput.value.trim();
+      const telefono = phoneInput.value.trim();
+
+      assignedNumbers.push({
+        name: nombre,
+        phone: telefono,
+        number: numeroSorteado,
+        paid: false,
+        timestamp: Date.now()
+      });
+      localStorage.setItem('assignedNumbers', JSON.stringify(assignedNumbers));
+
+      numberDisplay.textContent = numeroSorteado;
+      numberText.textContent = numeroSorteado;
+      payDisplay.textContent = `Pagarás: $${pago.toLocaleString()}`;
+      resultArea.style.display = 'block';
+
+      updateRemainingCount();
+      renderHistory();
+      renderNumbers();
+
+      showAlert(`Número asignado: ${numeroSorteado} para ${nombre}`);
+
+      nameInput.value = '';
+      phoneInput.value = '';
+      drawBtn.disabled = true;
+      drawBtn.setAttribute('aria-disabled', 'true');
+      nameInput.focus();
+    });
+
+    nameInput.addEventListener('input', handleInputChange);
+    phoneInput.addEventListener('input', handleInputChange);
+
+    // Handler for the hidden owner access button
+    ownerAccessBtn.addEventListener('click', () => {
+      const enteredUser = prompt("Usuario:");
+      if (enteredUser === null) return; // Cancelado
+      const enteredPass = prompt("Contraseña:");
+      if (enteredPass === null) return; // Cancelado
+      if (enteredUser === 'shamir1313' && enteredPass === '@camaro2015@') {
+        isOwnerMode = true;
+        showAlert("Modo propietario activado");
+        // Show delete buttons and enable toggles
+        renderHistory();
+        renderNumbers();
+        updateRemainingCount();
+        // Hide the owner access button after success
+        ownerAccessBtn.style.display = 'none';
+      } else {
+        alert("Usuario o contraseña incorrectos");
+      }
+    });
+
+    (function init() {
+      isOwnerMode = false;
+      updateRemainingCount();
+      renderHistory();
+      renderNumbers();
+      handleInputChange();
+      // Owner access button is visible initially
+      ownerAccessBtn.style.display = 'inline-block';
+    })();
+  });
+</script>
+</body>
+</html>
+```
